@@ -34,7 +34,10 @@ bool isOnEdge = false;
 triangle t;
 
 cout << "Enter the coordinates of the triangle vertices (x y): ";
-cin >> t.a.x >> t.a.y >> t.b.x >> t.b.y >> t.c.x >> t.c.y;
+if(!(cin >> t.a.x >> t.a.y >> t.b.x >> t.b.y >> t.c.x >> t.c.y)) {
+    cerr << "Error reading triangle coordinates." << endl;
+    return 1;
+}
 
 if (isTriangleAPoint(t)) {
     cout << "The triangle is a point." << endl;
@@ -46,12 +49,18 @@ if (isDegenerate(t)) {
 }
 cout << "Enter the amount of points to check: ";
 int n;
-cin >> n;
+if(!(cin >> n)) {
+    cerr << "Error reading the number of points." << endl;
+    return 1;
+}
 
 for (int i = 0; i < n; i++) {
 cout << "Enter the coordinates of the point " << i + 1 << "(x y): ";
 point p;
-cin >> p.x >> p.y;
+if(!(cin >> p.x >> p.y)) {
+    cerr << "Error reading point coordinates." << endl;
+    return 1;
+}
 if (isInside(t, p, isOnEdge)) {
         cout << "The point is inside the triangle." << endl;
     } else {
