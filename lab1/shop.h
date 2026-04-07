@@ -9,7 +9,7 @@ struct Money {
 void normalize(Money& money);
 void addValues(Money& money,int addHrn, int addKop);
 void multiplyBy(Money& money, int count);
-Money roundTo25(const Money& money);
+short int roundTo10(Money& money);
 void display(const Money& money);
 
 void displayMenu();

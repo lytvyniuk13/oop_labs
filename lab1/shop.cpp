@@ -24,24 +24,18 @@ void multiplyBy(Money& money, int count) {
     total_kopecks *= count;
 
     money.hrn = (int)(total_kopecks / 100);
-    money.kop = (short int)(total_kopecks % 100);
-    
+    money.kop = (short int)(total_kopecks % 100);   
 }
 
-Money roundTo25(const Money& money)  {
-    int total_kopecks = (int)money.hrn * 100 + money.kop;
-    
-    int remainder = total_kopecks % 25;
-    int base = total_kopecks - remainder;
-
-    if (remainder >= 13) {
-        base += 25;
+short int roundTo10(Money& money)  {
+    short int remainder = money.kop % 10;
+    if (remainder >= 7) {
+        money.kop += (10 - remainder);
+    } else {
+        money.kop -= remainder;
     }
-
-    Money rounded = { base / 100, (short int)(base % 100) };
-    return rounded;
+    return money.kop;
 }
-
 void display(const Money& money) {
     cout << money.hrn << ".";
     if (money.kop < 10) {
@@ -103,8 +97,8 @@ void displayMenu() {
     } while (choice != 0);
 //receipt
     normalize(totalSum);
-    Money roundedSum = roundTo25(totalSum);
-
+    Money roundedSum = totalSum;
+    roundTo10(roundedSum);
     cout << "====================================" << endl;
     cout << "Total Sum:           "; display(totalSum); cout << endl;
     cout << "Amount to Pay:       "; display(roundedSum); cout << endl;
