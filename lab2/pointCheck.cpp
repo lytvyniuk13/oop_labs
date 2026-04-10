@@ -21,10 +21,11 @@ bool isInside(triangle t, point p, bool &isOnEdge) {
     if (v1 == 0 || v2 == 0 || v3 == 0) {
         bool hasPos = (v1 > 0 || v2 > 0 || v3 > 0);
         bool hasNeg = (v1 < 0 || v2 < 0 || v3 < 0);
-        
-        if (!(hasPos && hasNeg)) {
+        if (v1 == 0 && v2 == 0 && v3 == 0) return false;
+        else if (!(hasPos && hasNeg)) {
             isOnEdge = true;
         }
+        
         return false;
     }
     return (v1 > 0 && v2 > 0 && v3 > 0) || (v1 < 0 && v2 < 0 && v3 < 0);
@@ -41,11 +42,11 @@ if(!(cin >> t.a.x >> t.a.y >> t.b.x >> t.b.y >> t.c.x >> t.c.y)) {
 
 if (isTriangleAPoint(t)) {
     cout << "The triangle is a point." << endl;
-    return 0;
+    
 }
 if (isDegenerate(t)) {
     cout << "The triangle is degenerate (a line)." << endl;
-    return 0;
+    
 }
 cout << "Enter the amount of points to check: ";
 int n;
