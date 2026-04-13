@@ -58,8 +58,8 @@ bool isInside_v(triangle t, point p, bool &isOnEdge) {
     if (v1 == 0 || v2 == 0 || v3 == 0) {
         bool hasPos = (v1 > 0 || v2 > 0 || v3 > 0);
         bool hasNeg = (v1 < 0 || v2 < 0 || v3 < 0);
-        
-        if (!(hasPos && hasNeg)) {
+        if (v1 == 0 && v2 == 0 && v3 == 0) return false;
+        else if (!(hasPos && hasNeg)) {
             isOnEdge = true;
         }
         
