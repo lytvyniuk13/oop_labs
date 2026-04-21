@@ -74,7 +74,7 @@ bool isInside_h(triangle t, point p, bool &isOnEdge) {
     if (isTriangleAPoint(t)) {
         double dx = t.a.x - p.x;
         double dy = t.a.y - p.y;
-        if ((dx < 0 ? -dx : dx) < 1e-7 && (dy < 0 ? -dy : dy) < 1e-7) {
+        if (dx == 0 && dy == 0) {
             isOnEdge = true;
         }
         return false;
@@ -102,17 +102,14 @@ double totalArea = heronArea(t.a, t.b, t.c);
     double A1 = heronArea(p, t.a, t.b);
     double A2 = heronArea(p, t.b, t.c);
     double A3 = heronArea(p, t.c, t.a);
-
-    double sumArea = A1 + A2 + A3;
-    double diff = totalArea - sumArea;
-
-    if ((diff < 0 ? -diff : diff) > 0) return false;
+    
     if (A1 == 0 || A2 == 0 || A3 == 0) {
         isOnEdge = true;
         return false;
     }
     
-    return true;
+    return abs(totalArea - (A1 + A2 + A3)) < 1e-7;
+
 }
 
 void printStatus(bool inside, bool onEdge) {
@@ -153,14 +150,8 @@ if(!(cin >> p.x >> p.y)) {
     cerr << "Error reading point coordinates." << endl;
     return 1;
 }
-    
-    bool insideVector = isInside_v(t, p, isOnEdge);
-
-    bool isOnEdgeHeron = false;
-    bool insideHeron = isInside_h(t, p, isOnEdgeHeron);
-
-    cout << "VECTOR: "; printStatus(insideVector, isOnEdge);
-    cout << "HERON: "; printStatus(insideHeron, isOnEdgeHeron);
+    cout << "VECTOR: "; printStatus(isInside_v(t, p, isOnEdge), isOnEdge);
+    cout << "HERON: "; printStatus(isInside_h(t, p, isOnEdge), isOnEdge);
 
 }
 return 0;
