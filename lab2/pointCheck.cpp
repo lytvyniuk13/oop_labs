@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include "pointCheck.h"
+#include <algorithm>
 using namespace std;
 bool isTriangleAPoint(triangle t) {
     return (t.a.x == t.b.x && t.a.y == t.b.y) && (t.b.x == t.c.x && t.b.y == t.c.y);
@@ -14,14 +15,13 @@ double vectorProduct(point a, point b, point p) {
 }
 
 double dist(point p1, point p2) {
-    return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
+    double dx = p1.x - p2.x;
+    double dy = p1.y - p2.y;
+    
+    return sqrt(dx * dx + dy * dy);
 }
 double heronArea(point p1, point p2, point p3) {
-    double a = dist(p1, p2);
-    double b = dist(p2, p3);
-    double c = dist(p3, p1);
-    double s = (a + b + c) / 2;
-    return sqrt(s * (s - a) * (s - b) * (s - c));
+return std::abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0);
 }
 
 bool isInside_v(triangle t, point p, bool &isOnEdge) {
@@ -68,9 +68,13 @@ bool isInside_v(triangle t, point p, bool &isOnEdge) {
     return (v1 > 0 && v2 > 0 && v3 > 0) || (v1 < 0 && v2 < 0 && v3 < 0);
 }
 
+bool isBetween(double value, double bound1, double bound2){
+    return value >= min(bound1, bound2) && value <= max(bound1, bound2);
+}
+
 bool isInside_h(triangle t, point p, bool &isOnEdge) {
     isOnEdge = false;
-    
+
     if (isTriangleAPoint(t)) {
         double dx = t.a.x - p.x;
         double dy = t.a.y - p.y;
@@ -98,18 +102,25 @@ bool isInside_h(triangle t, point p, bool &isOnEdge) {
         else isOnEdge = true; return false;
     }
 
-double totalArea = heronArea(t.a, t.b, t.c);
+    double totalArea = heronArea(t.a, t.b, t.c);
     double A1 = heronArea(p, t.a, t.b);
     double A2 = heronArea(p, t.b, t.c);
     double A3 = heronArea(p, t.c, t.a);
     
-    if (A1 == 0 || A2 == 0 || A3 == 0) {
-        isOnEdge = true;
-        return false;
-    }
-    
-    return abs(totalArea - (A1 + A2 + A3)) < 1e-7;
+    double sumArea = A1 + A2 + A3;
 
+    double epsilon = 1e-11 * max(1.0, totalArea);
+
+    if (abs(totalArea - sumArea) <= epsilon) {
+        double edgeEpsilon = 1e-13 * max(1.0, totalArea);
+        
+        if (A1 <= edgeEpsilon || A2 <= edgeEpsilon || A3 <= edgeEpsilon) {
+            isOnEdge = true;
+            return false;
+        }
+        return true;
+    }
+    return false;
 }
 
 void printStatus(bool inside, bool onEdge) {
