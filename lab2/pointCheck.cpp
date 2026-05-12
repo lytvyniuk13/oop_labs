@@ -21,7 +21,7 @@ double dist(point p1, point p2) {
     return sqrt(dx * dx + dy * dy);
 }
 double heronArea(point p1, point p2, point p3) {
-return abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0);
+return std::abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2.0);
 }
 
 bool isInside_v(triangle t, point p, bool &isOnEdge) {
@@ -76,7 +76,9 @@ bool isInside_h(triangle t, point p, bool &isOnEdge) {
     isOnEdge = false;
 
     if (isTriangleAPoint(t)) {
-        if (t.a.x == p.x && t.a.y == p.y) {
+        double dx = t.a.x - p.x;
+        double dy = t.a.y - p.y;
+        if (dx == 0 && dy == 0) {
             isOnEdge = true;
         }
         return false;
